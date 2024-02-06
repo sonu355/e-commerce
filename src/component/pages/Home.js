@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Typography, AppBar, Toolbar, Grid, GridCard,Paper } from '@mui/material'
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import ProductsCard from './ProductsCard';
 
 const Home = () => {
     const [products, setProducts] = useState([])
@@ -9,7 +10,7 @@ const Home = () => {
         .then(res => res.json())
         .then(data => setProducts(data))
     }, []);
-    console.log(products)
+    // console.log(products)
   return (
     <div>
       <AppBar color='default' elevation={0}>
@@ -18,10 +19,10 @@ const Home = () => {
             <Typography variant='h4' color='black'>SlipCart</Typography>
         </Toolbar>
       </AppBar>
-      <Grid container style={{marginTop: '75px'}} spacing={3}>
+      <Grid container style={{marginTop: '75px', display:'flex'}} spacing={5}>
         {products.map(product => (
             <Grid item key={product.id}>
-                <Paper>{product.image}</Paper>
+                <ProductsCard product={product} />
             </Grid>
         ))}
       </Grid>
