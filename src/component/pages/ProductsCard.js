@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardMedia,Typography, CardContent, CardActions, Skeleton } from '@mui/material';
+import {Button, Card, CardMedia,Typography, CardContent, CardActions, Skeleton, CircularProgress } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const truncateText = (text, maxLength) => {
@@ -11,7 +11,7 @@ const truncateText = (text, maxLength) => {
 
 const useStyles = makeStyles({
     card: {
-        height: '350px', 
+        height: 'auto', 
         width: '250px',
         margin: '3px',
         boxShadow: '0px 4px 8px rgba(0, 0,0,0.1)'
@@ -24,27 +24,30 @@ const useStyles = makeStyles({
 })
 
 const ProductsCard = ({ product }) => {
-    const classes = useStyles()
-    const truncatedTitle = truncateText(product.title, 20)
-    const truncatedDescription = truncateText(product.description, 100);
+const classes = useStyles()
+const truncatedTitle = truncateText(product.title, 20)
+const truncatedDescription = truncateText(product.description, 100);
     
     return (
-        <Card className={classes.card}>
-             {product ? (
-                <CardMedia className={classes.media} image={product.image} />
-            ) : (
-                <Skeleton variant="rectangular" width={200} height={200} />
-            )}
-            <CardContent>
-                <Typography variant='h6'>{truncatedTitle}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {truncatedDescription}
-                </Typography>
-                <Typography> {product.price}$</Typography>
-            </CardContent>
-            <CardActions>
-            </CardActions>
-        </Card>
+        <>
+            <Card className={classes.card}>
+                {product ? (
+                    <CardMedia className={classes.media} image={product.image} />
+                ) : (
+                    <Skeleton variant="rectangular" width={200} height={200} />
+                )}
+                <CardContent>
+                    <Typography variant='h6'>{truncatedTitle}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {truncatedDescription}
+                    </Typography>
+                    <Typography> {product ? `${product.price}$` : <CircularProgress size={20}/>}</Typography>
+                </CardContent>
+                <CardActions>
+                    <Button onClick={(e) => console.log("clicked")}  variant='contained' color='error'>Buy</Button>
+                </CardActions>
+            </Card>
+        </>
       );
 }
 export default ProductsCard
