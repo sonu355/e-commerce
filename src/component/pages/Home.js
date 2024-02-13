@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, AppBar, Toolbar, Grid, InputBase, styled, alpha} from '@mui/material'
+import { Typography, AppBar, Toolbar, Grid, InputBase, styled} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import ProductsCard from './ProductsCard';
+
+const API_KEY = 'https://fakestoreapi.com/products'
 
 const Home = () => {
     const [products, setProducts] = useState([])
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products')
+        fetch(API_KEY)
         .then(res => res.json())
         .then(data => setProducts(data))
     }, []);
@@ -16,12 +18,9 @@ const Home = () => {
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
-        '&:hover': {
-          backgroundColor: alpha(theme.palette.common.white, 0.25),
-        },
         marginLeft: 0,
-        width: '100%',
+        width: '350px',
+        backgroundColor: 'black',
         color: 'white',
         [theme.breakpoints.up('sm')]: {
           marginLeft: theme.spacing(1),
@@ -58,7 +57,7 @@ const Home = () => {
 
   return (
     <div>
-        <AppBar color='default' elevation={0}>
+        <AppBar color='default' style={{display: 'flex'}} elevation={0}>
             <Toolbar>
                 <LocalMallIcon fontSize='large'></LocalMallIcon>
                 <Typography variant='h4' color='black'>SlipCart</Typography>
@@ -83,5 +82,4 @@ const Home = () => {
     </div>
   )
 }
-
 export default Home
