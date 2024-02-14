@@ -11,7 +11,7 @@ const truncateText = (text, maxLength) => {
 
 const useStyles = makeStyles({
     card: {
-        height: 'auto', 
+        height: '450px', 
         width: '250px',
         margin: '3px',
         boxShadow: '0px 4px 8px rgba(0, 0,0,0.1)'
@@ -42,10 +42,10 @@ const truncatedDescription = truncateText(product.description, 100);
                         {truncatedDescription}
                     </Typography>
                     <Typography> {product ? `${product.price}$` : <CircularProgress size={20}/>}</Typography>
-                </CardContent>
-                <CardActions>
+                    <CardActions>
                     <Button onClick={(e) => console.log("clicked")}  variant='contained' color='error'>Buy</Button>
                 </CardActions>
+                </CardContent>
             </Card>
         </>
       );
