@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, AppBar, Toolbar, Grid, Box, styled, alpha, InputBase } from '@mui/material'
+import { Typography, AppBar, Toolbar, Grid, Box, styled, InputBase, Container, CircularProgress } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import ProductsCard from './ProductsCard';
+import PaginationPage from '../PaginationPage';
 
 const API_KEY = 'https://fakestoreapi.com/products'
-
-const flexContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-})
 
 const Search = styled('div')(({ theme, isActive }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: isActive ? '#fff' : 'gray',
+  backgroundColor: isActive ? 'gray' : '#fff',
   '&:hover': {
-    backgroundColor: "gray",
+    backgroundColor: "#fff",
   },
   marginLeft: 0,
   width: '100%',
@@ -24,6 +20,7 @@ const Search = styled('div')(({ theme, isActive }) => ({
     marginLeft: theme.spacing(1),
     width: 'auto',
   },
+  border: '1px solid red'
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -56,27 +53,42 @@ const Home = () => {
     const [products, setProducts] = useState([])
     const [search, setSearch] = useState('')
     const [isActive, setIsActive] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
+    // const [currentPage, setCurrentPage] = useState(1)
+    // const pageSize = 8;
 
     useEffect(() => {
-        fetch(API_KEY)
-        .then(res => res.json())
-        .then(data => setProducts(data))
+      const fetchData = async () => {
+        setIsLoading(true);
+        const response = await fetch(API_KEY)
+        const data = await response.json()
+        setProducts(data)
+        setIsLoading(false)
+      }
+      fetchData()
     }, []);
 
+    // const handlePageChange = (event, value) => {
+    //   setCurrentPage(value);
+    // };
+
   return (
-    <>
+    <Container>
           <Box sx={{flexGrow: 1}}>
-            <AppBar color='default' position='static' elevation={0}>
+            <AppBar style={{alignItems: 'center'}} color='default' position='static' elevation={0}>
                 <Toolbar>
-                    <LocalMallIcon fontSize='large'></LocalMallIcon>
-                    <Typography variant='h3' style={{}} color='black'>SlipCart</Typography>
+                    <LocalMallIcon fontSize='large' color='error'></LocalMallIcon>
+                    <Typography variant='h3' style={{}} color='error'>SlipCart</Typography>
                 </Toolbar>
-                <Search isActive={isActive} style={{width:'350px', alignItems:'center', margin: '0px 0px 20px 540px', }}>
-                  <SearchIconWrapper>
-                    <SearchIcon />
-                  </SearchIconWrapper>
+                <Search isActive={isActive} style={{width:'350px', alignItems:'center', marginBottom: '20px', }}>
+              
+                
+                    <SearchIconWrapper>
+                      <SearchIcon />
+                    </SearchIconWrapper>
+                
                   <StyledInputBase
-                    placeholder="Search Products"
+                    placeholder="Search Products..."
                     inputProps={{ 'aria-label': 'search' }}
                     onFocus={() => setIsActive(true)}
                     onChange={(e) => setSearch(e.target.value)}
@@ -84,18 +96,26 @@ const Home = () => {
                 </Search>
             </AppBar>
           </Box>
-        <Grid container style={{marginTop: '0px', display:'flex'}} spacing={5}>
+          {isLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+          <CircularProgress color='error'/>
+        </Box>
+      ) : (
+        <Grid container style={{marginTop: '0px', display:'flex', alignItems:'center'}} spacing={5}>
             {products
             .filter((product) => {
               return search.toLowerCase() === '' ? product : product.title.toLowerCase().includes(search)
             })
             .map(product => (
-                <Grid item key={product.id}>
+                <Grid item key={product.id} >
                     <ProductsCard product={product} />
                 </Grid>
             ))}
         </Grid>
-    </>
+      )}
+        <PaginationPage products={products}/>
+      
+    </Container>
   )
 }
 export default Home
