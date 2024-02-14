@@ -88,7 +88,7 @@ const Home = () => {
                     </SearchIconWrapper>
                 
                   <StyledInputBase
-                    placeholder="Search Products..."
+                    placeholder="Search..."
                     inputProps={{ 'aria-label': 'search' }}
                     onFocus={() => setIsActive(true)}
                     onChange={(e) => setSearch(e.target.value)}
