@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, AppBar, Toolbar, Grid, Box, styled, InputBase, Container, CircularProgress } from '@mui/material'
+import { Typography, AppBar, Toolbar, Grid, Box, styled, InputBase, Container, CircularProgress, Pagination } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import ProductsCard from './ProductsCard';
-import PaginationPage from '../PaginationPage';
 
 const API_KEY = 'https://fakestoreapi.com/products'
 
@@ -54,8 +53,8 @@ const Home = () => {
     const [search, setSearch] = useState('')
     const [isActive, setIsActive] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
-    // const [currentPage, setCurrentPage] = useState(1)
-    // const pageSize = 8;
+    const [currentPage, setCurrentPage] = useState(1)
+    const ProdutsPerPage = 8;
 
     useEffect(() => {
       const fetchData = async () => {
@@ -67,26 +66,26 @@ const Home = () => {
       }
       fetchData()
     }, []);
-
-    // const handlePageChange = (event, value) => {
-    //   setCurrentPage(value);
-    // };
+    const startIndex = (currentPage - 1) * ProdutsPerPage;
+    const endIndex = startIndex + ProdutsPerPage;
+    const displayedProducts = products.slice(startIndex, endIndex);
+  
+    const handlePageChange = (event, value) => {
+      setCurrentPage(value);
+    };
 
   return (
     <Container>
           <Box sx={{flexGrow: 1}}>
             <AppBar style={{alignItems: 'center'}} color='default' position='static' elevation={0}>
                 <Toolbar>
-                    <LocalMallIcon fontSize='large' color='error'></LocalMallIcon>
-                    <Typography variant='h3' style={{}} color='error'>SlipCart</Typography>
+                  <LocalMallIcon fontSize='large' color='error'></LocalMallIcon>
+                  <Typography variant='h3' style={{}} color='error'>SlipCart</Typography>
                 </Toolbar>
                 <Search isActive={isActive} style={{width:'350px', alignItems:'center', marginBottom: '20px', }}>
-              
-                
-                    <SearchIconWrapper>
-                      <SearchIcon />
-                    </SearchIconWrapper>
-                
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
                   <StyledInputBase
                     placeholder="Search..."
                     inputProps={{ 'aria-label': 'search' }}
@@ -97,24 +96,30 @@ const Home = () => {
             </AppBar>
           </Box>
           {isLoading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
-          <CircularProgress color='error'/>
-        </Box>
-      ) : (
-        <Grid container style={{marginTop: '0px', display:'flex', alignItems:'center'}} spacing={5}>
-            {products
-            .filter((product) => {
-              return search.toLowerCase() === '' ? product : product.title.toLowerCase().includes(search)
-            })
-            .map(product => (
-                <Grid item key={product.id} >
-                    <ProductsCard product={product} />
-                </Grid>
-            ))}
-        </Grid>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+            <CircularProgress color='error'/>
+          </Box>
+          ) : (
+            <>          
+              <Grid container style={{marginTop: '0px', display:'flex', alignItems:'center'}} spacing={5}>
+              {displayedProducts
+              .filter((product) => {
+                return search.toLowerCase() === '' ? product : product.title.toLowerCase().includes(search)
+              })
+              .map(product => (
+                  <Grid item key={product.id} >
+                      <ProductsCard product={product} />
+                  </Grid>
+              ))}
+              </Grid>
+              <Pagination 
+                count={Math.ceil(products.length / ProdutsPerPage)} 
+                page={currentPage} 
+                onChange={handlePageChange} 
+                style={{margin: '40px', al}}
+              />
+            </>
       )}
-        <PaginationPage products={products}/>
-      
     </Container>
   )
 }
